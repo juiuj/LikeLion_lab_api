@@ -3,21 +3,34 @@ import ShadowBox from '../Component/ShadowBox'
 import styled from 'styled-components';
 import MyInput from '../Component/MyInput';
 import MyButton from '../Component/MyButton';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
 
+  const navigate=useNavigate()
   const[username, setUsername]=useState('')
-  const[nickname, setNickname]=useState('')
+  const[nickName, setNickname]=useState('')
   const[email, setEmail]=useState('')
   const[password, setPassword]=useState('')
 
   const handleSubmit=async(e)=>{
     e.preventDefault()
-    console.log('username: ', username)
-    console.log('password: ', password)
-    console.log('nickname: ', nickname)
-    console.log('email: ', email)
-    
+    const data={
+      username,
+      password,
+      email,
+      nickName
+    }
+    try{
+      const res= await axios.post(process.env.REACT_APP_SERVER_URL + '/api/v1/auth/signup', data)
+      console.log('Signup Api res: ',res)
+      alert('회원가입 성공')
+      navigate('/')
+    } catch (error){ 
+      console.error(error);
+      alert('회원가입 실패')
+    }
 
   }
 
@@ -40,7 +53,7 @@ const Signup = () => {
        <MyInput 
         type='text' 
         placeholder='닉네임을 입력하세요'
-        value={nickname}
+        value={nickName}
         onChange={(e)=>{setNickname(e.target.value)}}
         ></MyInput>
         <MyInput 
