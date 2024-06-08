@@ -1,14 +1,18 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-const PostListItem = () => {
+const PostListItem = ((post) => {
+
+  const navigate=useNavigate()
+
   return (
-    <ItemBox>
-        <TitleTyphography>Title</TitleTyphography>
-        <AuthorTyphography>Author</AuthorTyphography>
+    <ItemBox onClick={()=>{navigate(`/post/${post.id}`)}}>
+        <TitleTyphography>{post.title}</TitleTyphography>
+        <AuthorTyphography>{post.user.username}</AuthorTyphography>
     </ItemBox>
   )
-}
+})
 
 const ItemBox=styled('div')`
     padding: 5px 15px;
@@ -18,6 +22,9 @@ const ItemBox=styled('div')`
     justify-content: space-between;
     align-items: baseline;
     margin-bottom: 15px;
+    &:hover{
+      background-color: #dddddd;
+    }
 `
 
 const TitleTyphography=styled('div')`

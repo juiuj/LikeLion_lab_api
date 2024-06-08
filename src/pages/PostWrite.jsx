@@ -3,16 +3,34 @@ import ShadowBox from '../Component/ShadowBox'
 import MyInput from '../Component/MyInput'
 import MyButton from '../Component/MyButton'
 import styled from 'styled-components'
+import axios from 'axios'
+import { Cookies, useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
 
 const PostWrite = () => {
 
     const [title, setTitle]=useState('')
     const [content, setContent]=useState('')
+    const[ cookies,setCookie, deleteCookie]=useCookies()
+    const navigate=useNavigate()
 
     const handleSubmit=async(e)=>{
         e.preventDefault()
-        console.log("title: ", title)
-        console.log("content: ", content)
+        const data={
+          title,
+          content
+        }
+        try{
+          const res=await axios.post(process.env.REACT_APP_SERVER_URL +'/api/v1/post', data, {
+            Authorization:'Bearer' + Cookies.accessToken
+          })
+          console.log(res)
+          alert('작성완료')
+          navigate('/')
+        } catch(error){
+          console.log(error)
+          alert('작성실패')
+        }
     }
 
   return (

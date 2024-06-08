@@ -1,18 +1,49 @@
 import styled from 'styled-components'
 import MyButton from '../Component/MyButton'
+import React, { useEffect, useState } from 'react'
+import { cookies, useCookies } from 'react-cookie'
+import axios from 'axios'
 
 const Home = () => {
 
-  const IsLogged= true
-  const username='홍길동'
+  const [username, setUsername]=useState('')
+  const[ cookies,setCookie, deleteCookie]=useCookies()
+
+
+  useEffect(()=>{
+    const fetch=async()=>{
+      if(cookies.accessToken){
+      try{
+        const res=await axios.get(process.env.REACT_APP_SERVER_URL + '/api/v1/auth/verify',{
+          headers: {
+            Authorization: 'Bearer'+cookies.accessToken
+          }
+        })
+        console.log(res)
+        setUsername(res.data)
+      }catch(error){
+        alert('Verify 실패')
+        console.error(error);
+      }
+    }
+  }
+    fetch()
+  },[])
+
+
+const handleLogout=()=>{
+  deleteCookie('accessToken')
+  setUsername('')
+  alert('로그아웃!!!')
+}
 
   return (
     <HomeBox>
-    {IsLogged ? 
+    {username ? 
     <div>
       <h1>{username}님 반갑습니다!</h1>
       <LogoutWrap>
-        <MyButton>로그아웃</MyButton>
+        <MyButton onClick={handleLogout}>로그아웃</MyButton>
       </LogoutWrap>
     </div>
     :

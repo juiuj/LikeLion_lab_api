@@ -1,16 +1,46 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { useCookies } from 'react-cookie'
 
 const Post = () => {
+
+  const {postId} = useParams()
+  const [post, setPost]=useState(null)
+  const[cookies,setCookie, deleteCookie]=useCookies()
+
+  useEffect(()=>{
+    ;(async() => {
+      try{
+        const res=await axios.get(process.env.REACT_APP_SERVER_URL+`/api/v1/post/${postId}`,{
+          headers:{
+            Authorization:'Bearer'+cookies.accessToken
+          }
+        })
+        console.log(res)
+        setPost(res.data)
+      }catch(error){
+        console.error(error);
+        alert('포스트 조회 실패')
+      }
+    })
+  },[])
+
+
   return (
     <React.Fragment>
-    <PostHead>
-      <TitleTyphography>Title</TitleTyphography>  
-      <AuthorTyphography>Author</AuthorTyphography>
+    {post ? <React.Fragment>
+      <PostHead>
+      <TitleTyphography>{post.title}</TitleTyphography>  
+      <AuthorTyphography>{post.user.username}r</AuthorTyphography>
     </PostHead>
     <h4>Content</h4>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quidem, in enim et totam dicta animi quo officiis. Assumenda veritatis expedita culpa laudantium iusto dolores nam eius vero corporis dignissimos.</p>
-    </React.Fragment>
+    <p>{post.content}</p>
+    </React.Fragment> 
+    :
+    <h1>Loaing...</h1>}
+    </React.Fragment> 
   )
 }
 
