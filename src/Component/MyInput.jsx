@@ -5,7 +5,7 @@ const MyInput=styled('input')`
     padding: 5px 10px;
     border-radius: 5px;
     box-sizing: border-box;
-    margin-bottom: 15%;
+    margin-bottom: 15px;
     
 `
 
